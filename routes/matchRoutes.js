@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { searchMatches } = require('../controllers/matchController');
-const { verifyToken } = require('../middleware/auth');
+const { authenticate } = require('../middleware/auth');
 
-router.get('/search', verifyToken, searchMatches);
+router.get('/search', authenticate, searchMatches);
 
 module.exports = router;
