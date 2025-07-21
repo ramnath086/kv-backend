@@ -3,12 +3,12 @@ const router = express.Router();
 const multer = require('multer');
 const cloudinary = require('../config/cloudinary');
 const User = require('../models/User');
-const authMiddleware = require('../middleware/auth');
+const { authenticate } = require('../middleware/auth');  // ✅ Corrected import
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-router.post('/profile-photo', auth, upload.single('photo'), async (req, res) => {
+router.post('/profile-photo', authenticate, upload.single('photo'), async (req, res) => {  // ✅ Corrected middleware name
   try {
     const fileStr = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
     const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
