@@ -1,11 +1,25 @@
 require('dotenv').config(); // 🔥 Ensure this is at the top
 
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const app = require('./app');
 const http = require('http');
 const { Server } = require('socket.io');
 
 const server = http.createServer(app);
+// ✅ Add security headers
+app.use(helmet());
+
+// ✅ Rate limiting middleware
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per window
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(limiter);
+
 
 // ✅ Socket.io setup
 const io = new Server(server, {
